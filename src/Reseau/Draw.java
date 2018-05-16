@@ -2,7 +2,11 @@ package Reseau;
 
 import java.awt.EventQueue;
 import java.awt.Graphics;
-
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -29,6 +33,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Draw {
 
@@ -38,7 +44,19 @@ public class Draw {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		String sentence;
+		String modifiedSentence;
+		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+		Socket clientSocket = new Socket("127.0.0.1", 6789);
+		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		sentence = inFromUser.readLine();
+		outToServer.writeBytes(sentence + '\n');
+		modifiedSentence = inFromServer.readLine();
+		System.out.println("FROM SERVER: " + modifiedSentence);
+		clientSocket.close();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -100,7 +118,7 @@ public class Draw {
 		JToggleButton tglbtnCercle = new JToggleButton("Cercle");
 		panel.add(tglbtnCercle);
 
-		
+
 		ZoneDessin	zone_dessin = new ZoneDessin();
 		zone_dessin.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -112,7 +130,7 @@ public class Draw {
 		});
 		zone_dessin.setBounds(10, 11, 408, 305);
 		frame.getContentPane().add(zone_dessin);
-		
+
 	}
 }
 

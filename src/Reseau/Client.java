@@ -1,34 +1,41 @@
 package Reseau;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Client {
+    public static void main(String[] zero) {        
 
-	final static int port = 9632;
-	final static int taille = 1024;
-	static byte buffer[] = new byte[taille];
-
-	public static void main(String argv[]) throws Exception {
-		try {
-			InetAddress serveur = InetAddress.getByName(argv[0]);
-			int length = argv[1].length();
-			byte buffer[] = argv[1].getBytes();
-			DatagramSocket socket = new DatagramSocket();
-			DatagramPacket donneesEmises = new DatagramPacket(buffer, length, serveur, port);
-			DatagramPacket donneesRecues = new DatagramPacket(new byte[taille], taille);
-
-			socket.setSoTimeout(30000);
-			socket.send(donneesEmises);
-			socket.receive(donneesRecues);
-
-			System.out.println("Message : " + new String(donneesRecues.getData(),
-					0, donneesRecues.getLength()));
-			System.out.println("de : " + donneesRecues.getAddress() + ":" +
-					donneesRecues.getPort());
-		} catch (SocketTimeoutException ste) {
-			System.out.println("Le delai pour la reponse a expire");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        Socket socket;
+        BufferedReader in;
+        PrintWriter out;
+        try {
+                socket = new Socket(InetAddress.getLocalHost(),2009);   
+                System.out.println("Demande de connexion");
+                in = new BufferedReader (new InputStreamReader (socket.getInputStream()));
+                String message_distant = in.readLine(); //vous etes connecté
+                System.out.println(message_distant);
+                message_distant = in.readLine();
+                System.out.println(message_distant);  
+                out = new PrintWriter(socket.getOutputStream());
+                out.flush();
+                out.println("o");
+                out.flush();
+              
+                message_distant = in.readLine();
+                System.out.println(message_distant);  
+                socket.close();               
+        }
+        catch (UnknownHostException e) {
+        	e.printStackTrace();
+        }
+        catch (IOException e) {            
+            e.printStackTrace();
+        }
+    }
 }
+
