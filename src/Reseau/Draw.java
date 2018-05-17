@@ -26,22 +26,11 @@ public class Draw {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) throws IOException {
-		String sentence;
-		String modifiedSentence;
-		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-		Socket clientSocket = new Socket("127.0.0.1", 6789);
-		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		sentence = inFromUser.readLine();
-		outToServer.writeBytes(sentence + '\n');
-		modifiedSentence = inFromServer.readLine();
-		System.out.println("FROM SERVER: " + modifiedSentence);
-		clientSocket.close();
-		
+	public static void main(String[] args) throws IOException {		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Client joueur = new Client();		
 					Draw window = new Draw();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -114,6 +103,9 @@ public class Draw {
 		frame.getContentPane().add(zone_dessin);
 
 	}
+
+	
+	
 }
 
 
