@@ -21,12 +21,12 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
+import javax.swing.JSpinner;
 
 public class ConnexionServer {
 
 	private JFrame frame;
 	private JTextField textField;
-	private JTextField txtCoucou;
 
 	/**
 	 * Launch the application.
@@ -66,9 +66,7 @@ public class ConnexionServer {
 		
 		JLabel lblPort = new JLabel("Port");
 		
-		txtCoucou = new JTextField();
-		txtCoucou.setToolTipText("");
-		txtCoucou.setColumns(10);
+		JSpinner spinner = new JSpinner();
 		
 		JButton btnConnexion = new JButton("Connexion");
 		btnConnexion.addActionListener(new ActionListener() {
@@ -78,27 +76,34 @@ public class ConnexionServer {
 		        PrintWriter out;
 				 try {
 					 	System.out.print(InetAddress.getLocalHost());
-		                socket = new Socket(InetAddress.getByName(textField.getText()), 2009);   
+		                socket = new Socket(InetAddress.getByName(textField.getText()), (int)spinner.getValue());   
 		                System.out.println("Demande de connexion");
-		                in = new BufferedReader (new InputStreamReader (socket.getInputStream()));
+		                
+		                /*
+		                 * Recuperation du message du serveur
+		                 */
+		                in = new BufferedReader (new InputStreamReader(socket.getInputStream()));
 		                String message_distant = in.readLine(); 
 		                System.out.println(message_distant);
 		                message_distant = in.readLine();
 		                System.out.println(message_distant);  
-		                out = new PrintWriter(socket.getOutputStream());
-		                out.flush();
-		                out.println("o");
-		                out.flush();
-		                message_distant = in.readLine();
-		                System.out.println(message_distant);
-		                socket.close();
-		              
 		                
 		                /*
-		                 * Message de connexion reussie
+		                 * Envoi d'un message au serveur
 		                 */
-		                JTextField message = new JTextField();
-		                message.setText("Connexion reussie");
+		                out = new PrintWriter(socket.getOutputStream());
+		                out.flush();	//Vide le flux d'entrée
+		                out.println("o");
+		                out.flush();
+		                //String message_distant = in.readLine();
+		                System.out.println(message_distant);
+		                socket.close();	// Fermeture du socket
+		              
+		                Draw joueur = new Draw();
+		                joueur.connexion(socket, in, out);
+		                joueur.setText("Connexion reussie");
+		                joueur.setText("Attente joueur ...");
+		                //frame.setVisible(false);
 		        }
 		        catch (UnknownHostException e) {
 		        	e.printStackTrace();
@@ -108,6 +113,7 @@ public class ConnexionServer {
 		        }
 			}
 		});
+		
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -119,9 +125,9 @@ public class ConnexionServer {
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnConnexion)
-						.addComponent(txtCoucou, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(106, Short.MAX_VALUE))
+						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(spinner, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(28, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -132,11 +138,11 @@ public class ConnexionServer {
 						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(txtCoucou, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblPort))
+						.addComponent(lblPort)
+						.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnConnexion)
-					.addContainerGap(47, Short.MAX_VALUE))
+					.addContainerGap(35, Short.MAX_VALUE))
 		);
 		frame.getContentPane().setLayout(groupLayout);
 	}

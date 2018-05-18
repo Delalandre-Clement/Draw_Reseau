@@ -1,12 +1,6 @@
 package Reseau;
 
-import java.awt.EventQueue;
 import java.awt.Graphics;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -17,28 +11,19 @@ import java.awt.Panel;
 import javax.swing.JToggleButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 
-public class Draw {
+public class Draw extends JFrame {
 
 	private JFrame frame;
 	private JTextField textField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) throws IOException {		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Client joueur = new Client();		
-					Draw window = new Draw();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextArea textArea;
+	private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
 
 	/**
 	 * Create the application.
@@ -50,25 +35,24 @@ public class Draw {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 547, 410);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		textField = new JTextField();
-		textField.setBounds(428, 322, 103, 20);
+		textField.setBounds(404, 322, 127, 20);
 		textField.setColumns(10);
 
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(428, 0, 103, 316);
+		textArea = new JTextArea();
+		textArea.setBounds(404, 0, 127, 316);
 		textArea.setEnabled(false);
 
 		JButton btnEnvoyer = new JButton("Envoyer");
-		btnEnvoyer.setBounds(428, 348, 103, 23);
+		btnEnvoyer.setBounds(404, 348, 127, 23);
 		btnEnvoyer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("\n\r" + textField.getText());
-				textField.setText(null);
+				setText(textField.getText());
 			}
 		});
 		frame.getContentPane().setLayout(null);
@@ -77,7 +61,7 @@ public class Draw {
 		frame.getContentPane().add(btnEnvoyer);
 
 		Panel panel = new Panel();
-		panel.setBounds(10, 328, 408, 33);
+		panel.setBounds(10, 328, 373, 33);
 		frame.getContentPane().add(panel);
 
 		JToggleButton tglbtnLigne = new JToggleButton("Ligne");
@@ -99,11 +83,29 @@ public class Draw {
 				zone_dessin.paint_ligne(g, point_depart, point_arrive);
 			}			
 		});
-		zone_dessin.setBounds(10, 11, 408, 305);
+		zone_dessin.setBounds(10, 11, 373, 305);
 		frame.getContentPane().add(zone_dessin);
+		frame.setVisible(true);
 
 	}
-
+	
+	void setText(String message) {
+		textArea.append("\n\r" + message);
+		textField.setText(null);
+	}
+	
+	void connexion(Socket socket, BufferedReader in, PrintWriter out) {
+		this.socket=socket;
+		this.in=in;
+		this.out=out;
+		try {
+			String message_distant = this.in.readLine();
+			setText(message_distant);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 	
 	
 }
