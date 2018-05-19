@@ -78,9 +78,18 @@ public class Draw extends JFrame {
 		zone_dessin.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				Point point_depart = new Point(e.getX(),e.getY());
-				Point point_arrive = new Point(e.getX()+20,e.getY()+20);
+				
 				Graphics g = zone_dessin.getGraphics();
-				zone_dessin.paint_ligne(g, point_depart, point_arrive);
+				
+				if(tglbtnLigne.isSelected()) {
+					Point point_arrive = new Point(e.getX()+20,e.getY()+20);
+					zone_dessin.paint_ligne(g, point_depart, point_arrive);
+				}
+				
+				if(tglbtnRectangle.isSelected()) {
+					Point point_arrive = new Point(e.getX()+10,e.getY()+15);
+					zone_dessin.paint_carre(g, point_depart, point_arrive);
+				}
 			}			
 		});
 		zone_dessin.setBounds(10, 11, 373, 305);
