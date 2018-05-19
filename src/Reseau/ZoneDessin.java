@@ -21,6 +21,6 @@ public class ZoneDessin extends Applet
 	
 	public void paint_carre(Graphics g, Point depart, Point arrivee) {
 		g.setColor(Color.black);
-		g.fillRect(depart.getX(), depart.getY(), arrivee.getX(), arrivee.getY());
+		g.drawRect(depart.getX(), depart.getY(), arrivee.getX(), arrivee.getY());
 	}
 }
