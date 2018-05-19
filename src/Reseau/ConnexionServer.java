@@ -92,7 +92,7 @@ public class ConnexionServer {
 		                /*
 		                 * Envoi d'un message au serveur
 		                 
-		                out = new PrintWriter(socket.getOutputStream());
+		           		out = new PrintWriter(socket.getOutputStream());
 		                out.flush();	// Vide le flux d'entrée
 		                out.println("o");
 		                out.flush();

@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import javax.swing.ImageIcon;
 
 public class Draw extends JFrame {
 
@@ -63,15 +64,18 @@ public class Draw extends JFrame {
 		Panel panel = new Panel();
 		panel.setBounds(10, 328, 373, 33);
 		frame.getContentPane().add(panel);
+		
+		JToggleButton tglbtnGauche = new JToggleButton("Gauche");
+		panel.add(tglbtnGauche);
+		
+		JToggleButton tglbtnDroite = new JToggleButton("Droite");
+		panel.add(tglbtnDroite);
 
 		JToggleButton tglbtnLigne = new JToggleButton("Ligne");
 		panel.add(tglbtnLigne);
 
 		JToggleButton tglbtnRectangle = new JToggleButton("Rectangle");
 		panel.add(tglbtnRectangle);
-
-		JToggleButton tglbtnCercle = new JToggleButton("Cercle");
-		panel.add(tglbtnCercle);
 
 
 		ZoneDessin	zone_dessin = new ZoneDessin();
@@ -82,7 +86,15 @@ public class Draw extends JFrame {
 				Graphics g = zone_dessin.getGraphics();
 				
 				if(tglbtnLigne.isSelected()) {
-					Point point_arrive = new Point(e.getX()+20,e.getY()+20);
+					Point point_arrive = new Point(e.getX()+20, e.getY()+20);	//Valeur par defaut
+					if(tglbtnDroite.isSelected()) {
+						point_arrive.setX(e.getX()+20);
+						point_arrive.setY(e.getY()+20);
+					}
+					if(tglbtnGauche.isSelected()) {
+						point_arrive.setX(e.getX()-20);
+						point_arrive.setY(e.getY()+20);
+					}
 					zone_dessin.paint_ligne(g, point_depart, point_arrive);
 				}
 				
@@ -115,8 +127,6 @@ public class Draw extends JFrame {
 			e.printStackTrace();
 		} 
 	}
-	
-	
 }
 
 
