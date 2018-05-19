@@ -79,28 +79,29 @@ public class ConnexionServer {
 		                socket = new Socket(InetAddress.getByName(textField.getText()), (int)spinner.getValue());   
 		                System.out.println("Demande de connexion");
 		                
+		                
 		                /*
 		                 * Recuperation du message du serveur
-		                 */
+		                 
 		                in = new BufferedReader (new InputStreamReader(socket.getInputStream()));
 		                String message_distant = in.readLine(); 
 		                System.out.println(message_distant);
 		                message_distant = in.readLine();
 		                System.out.println(message_distant);  
-		                
+		                */
 		                /*
 		                 * Envoi d'un message au serveur
-		                 */
+		                 
 		                out = new PrintWriter(socket.getOutputStream());
-		                out.flush();	//Vide le flux d'entrée
+		                out.flush();	// Vide le flux d'entrée
 		                out.println("o");
 		                out.flush();
 		                //String message_distant = in.readLine();
 		                System.out.println(message_distant);
 		                socket.close();	// Fermeture du socket
-		              
+		                 */
 		                Draw joueur = new Draw();
-		                joueur.connexion(socket, in, out);
+		                //joueur.connexion(socket, in, out);
 		                joueur.setText("Connexion reussie");
 		                joueur.setText("Attente joueur ...");
 		                //frame.setVisible(false);
